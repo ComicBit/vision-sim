@@ -48,7 +48,7 @@ All effects are applied in real-time and can be entered exactly as written on a 
 3. On your browser (laptop or mobile on the same network), open:
 
    ```
-   http://<your-pi-ip>:8080
+   http://<your-ip>:8080
    ```
 
 4. Enter your prescription on the setup screen and press **Start simulation**.
