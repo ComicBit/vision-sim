@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Eye‑Prescription Setup</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="style.css" rel="stylesheet">
+</head>
+<body>
+<h1>Enter your prescription</h1>
+
+<form id="rxForm">
+  <table>
+    <thead>
+      <tr><th></th><th colspan="4">Right eye (OD)</th><th colspan="4">Left eye (OS)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Sphere&nbsp;(SPH)</th>
+        <td><input type="number" step="0.25" id="sphR"></td>
+        <td colspan="3"></td>
+        <td><input type="number" step="0.25" id="sphL"></td>
+        <td colspan="3"></td>
+      </tr>
+      <tr>
+        <th>Cylinder&nbsp;(CYL)</th>
+        <td><input type="number" step="0.25" id="cylR"></td>
+        <th>Axis</th>
+        <td><input type="number" step="1" min="0" max="180" id="axR"></td>
+        <td></td>
+        <td><input type="number" step="0.25" id="cylL"></td>
+        <th>Axis</th>
+        <td><input type="number" step="1" min="0" max="180" id="axL"></td>
+      </tr>
+      <tr>
+        <th>ADD (near)</th>
+        <td><input type="number" step="0.25" id="addR"></td><td colspan="3"></td>
+        <td><input type="number" step="0.25" id="addL"></td><td colspan="3"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="hint">
+    • *Sphere* &lt; 0 = myopia &gt; 0 = hyperopia<br>
+    • *Cylinder* indicates astigmatism strength, *Axis* its angle (0–180 °)<br>
+    • *ADD* (&quot;addition&quot;) is used for presbyopia / reading power – leave blank if not given
+  </p>
+
+  <button type="submit">Start simulation →</button>
+</form>
+
+<script>
+const f = document.getElementById('rxForm');
+
+// pre‑fill from localStorage
+['sphR','sphL','cylR','cylL','axR','axL','addR','addL'].forEach(id=>{
+  if(localStorage[id]!==undefined) f[id].value = localStorage[id];
+});
+
+f.addEventListener('submit', e=>{
+  e.preventDefault();
+  // simple validation
+  if(f.axR.value && (f.axR.value<0 || f.axR.value>180) ||
+     f.axL.value && (f.axL.value<0 || f.axL.value>180)){
+       alert('Axis must be 0‑180°'); return;
+  }
+  // save
+  ['sphR','sphL','cylR','cylL','axR','axL','addR','addL'].forEach(id=>{
+    localStorage[id] = f[id].value;
+  });
+  // go to sim
+  location.href='sim.html';
+});
+</script>
+</body>
+</html>
+

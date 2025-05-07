@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vision Simulator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="style.css" rel="stylesheet">
+</head>
+<body>
+<video id="video" autoplay playsinline></video>
+<canvas id="glcanvas"></canvas>
+
+<!-- Bottom-sheet settings panel -->
+<div id="panel" class="collapsed">
+  <div id="handle"></div>
+  <strong>Edit prescription (dioptres)</strong><br>
+  R&nbsp;SPH <input id="fsphR"> CYL <input id="fcylR"> AX <input id="faxR"><br>
+  L&nbsp;SPH <input id="fsphL"> CYL <input id="fcylL"> AX <input id="faxL"><br>
+  <button id="save">Save</button>
+</div>
+
+
+<script src="sim.js"></script>
+</body>
+</html>
