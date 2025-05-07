@@ -8,12 +8,39 @@ let rx = {
   addR:g('addR'), addL:g('addL')
 };
 
-/* ---------- camera ------------------------------------------------------ */
+/* ---------- camera, iOS‑safe ------------------------------------------- */
 const video = document.getElementById('video');
-try{
-  const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
-  video.srcObject=stream; await video.play();
-}catch(e){alert('Camera error: '+e.message);return;}
+video.muted = true;
+video.setAttribute('playsinline','');
+
+async function openCamera() {
+  const constraints = { video: { facingMode: 'environment' } };
+
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+    throw new Error('Must be served over HTTPS or localhost for camera access');
+  }
+
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    return navigator.mediaDevices.getUserMedia(constraints);
+  }
+
+  // legacy Safari ≤ iOS 11
+  const legacy = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+  if (legacy) {
+    return new Promise((res, rej) => legacy.call(navigator, constraints, res, rej));
+  }
+
+  throw new Error('Camera API not supported in this browser');
+}
+
+try {
+  const stream = await openCamera();
+  video.srcObject = stream;
+  await video.play();
+} catch (e) {
+  alert('Camera error: ' + e.message);
+  return;
+}
 
 /* ---------- WebGL ------------------------------------------------------- */
 const canvas=document.getElementById('glcanvas');
@@ -104,7 +131,7 @@ const uCyl=gl.getUniformLocation(prog,'u_cyl');
 const panel = document.getElementById('panel');
 document.getElementById('handle').onclick = () =>
   panel.classList.toggle('collapsed');
-  
+
 document.getElementById('save').onclick = ()=>{
   ['sphR','sphL','cylR','cylL','axR','axL'].forEach(k=>{
     rx[k]=parseFloat(document.getElementById('f'+k).value)||0;
